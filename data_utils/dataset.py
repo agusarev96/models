@@ -6,7 +6,7 @@ import numpy as np
 
 class DataSet:
     
-    def __init__(self, data:Union[pd.DataFrame, np.ndarray], feature_names:List=[]):
+    def __init__(self, data:Union[pd.DataFrame, np.ndarray], feature_names:List=[], target_column:Union[str, int]=None):
         if (type(data) == np.ndarray) and (len(feature_names) == 0):
             raise ValueError("If you pass numpy array you need to specify `feature_names`")
         
@@ -23,6 +23,11 @@ class DataSet:
         
         self.feature_names = feature_names if feature_names else list(data.columns)
         self.data = data.values if type(data) == pd.DataFrame else data
+        
+        if target_column and (type(data) == pd.DataFrame):
+            self.target = data[target_column].values
+        elif target_column and (type(data)==np.ndarray):
+            self.target = data[:, target_column]
         
     def __str__(self) -> str:
         return (
